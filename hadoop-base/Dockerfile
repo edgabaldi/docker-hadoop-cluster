@@ -43,7 +43,7 @@ ENV PATH $PATH:$JAVA_HOME/bin
 RUN mkdir -p /tmp/native
 RUN curl -Ls http://dl.bintray.com/sequenceiq/sequenceiq-bin/hadoop-native-64-2.7.0.tar | tar -x -C /tmp/native
 
-ENV HADOOP_VERSION=3.0.0-alpha4-SNAPSHOT
+ENV HADOOP_VERSION=2.7.4
 ADD hadoop-${HADOOP_VERSION}.tar.gz /usr/local/
 WORKDIR /usr/local
 RUN ln -s /usr/local/hadoop-${HADOOP_VERSION} /usr/local/hadoop
@@ -56,6 +56,31 @@ ENV HADOOP_YARN_HOME /usr/local/hadoop
 ENV HADOOP_CONF_DIR /usr/local/hadoop/etc/hadoop
 ENV YARN_CONF_DIR /usr/local/hadoop/etc/hadoop
 ENV HADOOP_LOG_DIR /var/log/hadoop
+
+# Set up Sqoop
+ENV SQOOP_HOME /opt/sqoop
+ENV PATH ${PATH}:${SQOOP_HOME}/bin:${HADOOP_HOME}/bin
+
+# download sqoop
+
+RUN /bin/bash -c 'set -x && \
+    echo "Downloading Sqoop" && \
+    wget -qO - http://www.apache.org/dist/sqoop/1.4.6/sqoop-1.4.6.bin__hadoop-2.0.4-alpha.tar.gz | tar -xz -C /opt && \
+    cd /opt && ln -s ./sqoop-1.4.6.bin__hadoop-2.0.4-alpha sqoop'
+
+# download mysql driver
+
+RUN /bin/bash -c 'set -x && \
+    echo "Downloading the JDBC drivers for MySQL" && \
+    wget -qP /tmp/ http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.37.tar.gz && \
+    tar -C /tmp/ -xzf /tmp/mysql-connector-java-5.1.37.tar.gz && \
+    cp /tmp/mysql-connector-java-5.1.37/mysql-connector-java-5.1.37-bin.jar /opt/sqoop/lib/'
+
+# PIG
+RUN curl -LO http://ftp.unicamp.br/pub/apache/pig/latest/pig-0.17.0.tar.gz
+RUN tar xzf pig-0.17.0.tar.gz
+
+ENV PATH $PATH:/pig-0.17.0/bin
 
 RUN mkdir /var/log/hadoop
 
