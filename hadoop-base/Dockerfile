@@ -80,7 +80,12 @@ RUN /bin/bash -c 'set -x && \
 RUN curl -LO http://ftp.unicamp.br/pub/apache/pig/latest/pig-0.17.0.tar.gz
 RUN tar xzf pig-0.17.0.tar.gz
 
-ENV PATH $PATH:/pig-0.17.0/bin
+ENV PATH $PATH:pig-0.17.0/bin
+
+# Flume
+
+# Hive
+
 
 RUN mkdir /var/log/hadoop
 
