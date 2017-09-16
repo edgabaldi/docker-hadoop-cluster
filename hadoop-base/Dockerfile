@@ -19,7 +19,7 @@ USER root
 
 # install dev tools
 RUN apt-get update
-RUN apt-get install -y curl tar sudo openssh-server openssh-client rsync
+RUN apt-get install -y curl tar sudo openssh-server openssh-client rsync vim
 
 # passwordless ssh
 RUN rm -f /etc/ssh/ssh_host_dsa_key /etc/ssh/ssh_host_rsa_key /root/.ssh/id_rsa
@@ -56,6 +56,7 @@ ENV HADOOP_YARN_HOME /usr/local/hadoop
 ENV HADOOP_CONF_DIR /usr/local/hadoop/etc/hadoop
 ENV YARN_CONF_DIR /usr/local/hadoop/etc/hadoop
 ENV HADOOP_LOG_DIR /var/log/hadoop
+ENV HADOOP_CLASSPATH=$JAVA_HOME/lib/tools.jar
 
 # Set up Sqoop
 ENV SQOOP_HOME /opt/sqoop
